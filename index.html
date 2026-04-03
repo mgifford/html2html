@@ -467,7 +467,7 @@
           <iframe
             id="preview"
             title="Live HTML preview with Sa11y accessibility checker"
-            sandbox="allow-same-origin allow-scripts"
+            sandbox="allow-scripts"
             referrerpolicy="no-referrer"
           ></iframe>
         </div>
@@ -571,8 +571,8 @@
         "</head>",
         "<body>",
         "  <div id=\"playground-root\">" + bodyMarkup + "</div>",
-        "  <script src=\"" + SA11Y_ASSETS.lang + "\"></script>",
-        "  <script src=\"" + SA11Y_ASSETS.script + "\"></script>",
+        "  <script src=\"" + SA11Y_ASSETS.lang + "\"><\/script>",
+        "  <script src=\"" + SA11Y_ASSETS.script + "\"><\/script>",
         "  <script>",
         "    window.addEventListener('load', function () {",
         "      try {",
@@ -584,7 +584,7 @@
         "        console.error('Sa11y initialization failed:', error);",
         "      }",
         "    });",
-        "  </script>",
+        "  <\/script>",
         "</body>",
         "</html>"
       ].join("\n");
