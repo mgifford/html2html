@@ -136,6 +136,70 @@
       color: #0d1728;
     }
 
+    body[data-shell-theme="swapped"] .panel:first-child {
+      background: linear-gradient(180deg, #f8fbff 0%, #eef3fb 100%);
+      color: #0d1728;
+    }
+
+    body[data-shell-theme="swapped"] .panel:first-child .panel__header,
+    body[data-shell-theme="swapped"] .panel:first-child .panel__toolbar {
+      border-color: rgba(13, 23, 40, 0.1);
+    }
+
+    body[data-shell-theme="swapped"] .panel:first-child .panel__description,
+    body[data-shell-theme="swapped"] .panel:first-child .panel__subtle,
+    body[data-shell-theme="swapped"] .panel:first-child .status {
+      color: #53627a;
+    }
+
+    body[data-shell-theme="swapped"] .panel:first-child button {
+      background: rgba(13, 23, 40, 0.04);
+      color: #0d1728;
+      border-color: rgba(13, 23, 40, 0.12);
+    }
+
+    body[data-shell-theme="swapped"] .panel:first-child .button--accent {
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: #041019;
+      border-color: transparent;
+    }
+
+    body[data-shell-theme="swapped"] .panel:first-child .button--danger {
+      color: #9a2037;
+      border-color: rgba(255, 122, 144, 0.28);
+      background: rgba(255, 122, 144, 0.12);
+    }
+
+    body[data-shell-theme="swapped"] .panel:first-child .editor-shell {
+      background:
+        linear-gradient(180deg, rgba(13, 23, 40, 0.02), transparent),
+        linear-gradient(135deg, rgba(102, 140, 255, 0.06), transparent 45%);
+    }
+
+    body[data-shell-theme="swapped"] .panel:first-child textarea {
+      color: #0d1728;
+      caret-color: #1d4ed8;
+    }
+
+    body[data-shell-theme="swapped"] .panel:first-child textarea::selection {
+      background: rgba(29, 78, 216, 0.16);
+    }
+
+    body[data-shell-theme="swapped"] .panel--preview {
+      background: linear-gradient(180deg, rgba(19, 32, 58, 0.96), rgba(9, 17, 31, 0.98));
+      color: var(--text);
+    }
+
+    body[data-shell-theme="swapped"] .panel--preview .panel__header,
+    body[data-shell-theme="swapped"] .panel--preview .panel__toolbar {
+      border-color: var(--border);
+    }
+
+    body[data-shell-theme="swapped"] .panel--preview .panel__description,
+    body[data-shell-theme="swapped"] .panel--preview .panel__subtle {
+      color: var(--text-muted);
+    }
+
     .panel__header,
     .panel__toolbar {
       display: flex;
@@ -235,6 +299,58 @@
       color: var(--accent);
     }
 
+    .segmented-control {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 6px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .segmented-control button {
+      padding: 8px 12px;
+      min-width: 78px;
+    }
+
+    .segmented-control button[aria-pressed="true"] {
+      background: rgba(117, 224, 192, 0.18);
+      border-color: rgba(117, 224, 192, 0.45);
+    }
+
+    .panel--preview .segmented-control {
+      border-color: rgba(13, 23, 40, 0.12);
+      background: rgba(13, 23, 40, 0.04);
+    }
+
+    .panel--preview .segmented-control button {
+      background: rgba(13, 23, 40, 0.04);
+      color: #0d1728;
+      border-color: rgba(13, 23, 40, 0.12);
+    }
+
+    .panel--preview .segmented-control button[aria-pressed="true"] {
+      background: rgba(29, 78, 216, 0.12);
+      border-color: rgba(29, 78, 216, 0.28);
+    }
+
+    body[data-shell-theme="swapped"] .panel--preview .segmented-control {
+      border-color: var(--border);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    body[data-shell-theme="swapped"] .panel--preview .segmented-control button {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      border-color: var(--border-strong);
+    }
+
+    body[data-shell-theme="swapped"] .panel--preview .segmented-control button[aria-pressed="true"] {
+      background: rgba(117, 224, 192, 0.18);
+      border-color: rgba(117, 224, 192, 0.45);
+    }
+
     .editor-shell {
       min-height: 0;
       position: relative;
@@ -269,16 +385,38 @@
         linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.98)),
         linear-gradient(135deg, rgba(102, 140, 255, 0.06), transparent 45%);
       padding: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    body[data-shell-theme="swapped"] .panel--preview .preview-shell {
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
+        linear-gradient(90deg, rgba(117, 224, 192, 0.06), transparent 20%);
     }
 
     iframe {
       width: 100%;
       height: 100%;
       min-height: 420px;
+      max-width: 100%;
       border: 1px solid rgba(13, 23, 40, 0.12);
       border-radius: 18px;
       background: #ffffff;
       box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+    }
+
+    iframe[data-viewport="desktop"] {
+      width: 100%;
+    }
+
+    iframe[data-viewport="tablet"] {
+      width: min(820px, 100%);
+    }
+
+    iframe[data-viewport="mobile"] {
+      width: min(430px, 100%);
     }
 
     .panel__subtle {
@@ -360,7 +498,7 @@
             <h2 id="editor-title">HTML / SVG Editor</h2>
             <p class="panel__description">Paste a full document or a fragment. CSS links in the markup are applied to the preview.</p>
           </div>
-          <span class="panel__subtle">Dark editing surface</span>
+          <span class="panel__subtle" id="editorSurfaceLabel">Dark editing surface</span>
         </div>
 
         <div class="panel__toolbar">
@@ -368,6 +506,7 @@
             <button class="button--accent" id="copyButton" type="button">Copy Code</button>
             <button id="downloadButton" type="button">Download as HTML</button>
             <button class="button--danger" id="clearButton" type="button">Clear Editor</button>
+            <button id="swapShellButton" type="button" aria-pressed="false">Swap Surfaces</button>
           </div>
           <output class="status" id="statusMessage" aria-live="polite">Ready.</output>
         </div>
@@ -453,12 +592,20 @@
             <h2 id="preview-title">Live Preview</h2>
             <p class="panel__description">The iframe is rebuilt from sanitized markup and Sa11y is injected after each refresh.</p>
           </div>
-          <span class="panel__subtle">Light preview surface</span>
+          <span class="panel__subtle" id="previewSurfaceLabel">Light preview surface</span>
         </div>
 
         <div class="panel__toolbar">
           <div class="toolbar__group">
-            <span class="panel__subtle">User scripts blocked. Internal Sa11y allowed.</span>
+            <div class="segmented-control" role="group" aria-label="Preview theme">
+              <button type="button" data-theme-option="light" aria-pressed="true">Light</button>
+              <button type="button" data-theme-option="dark" aria-pressed="false">Dark</button>
+            </div>
+            <div class="segmented-control" role="group" aria-label="Preview viewport">
+              <button type="button" data-viewport-option="desktop" aria-pressed="true">Desktop</button>
+              <button type="button" data-viewport-option="tablet" aria-pressed="false">Tablet</button>
+              <button type="button" data-viewport-option="mobile" aria-pressed="false">Mobile</button>
+            </div>
           </div>
           <span class="panel__subtle" id="renderDetails">Waiting for input…</span>
         </div>
@@ -481,8 +628,13 @@
     const copyButton = document.getElementById("copyButton");
     const downloadButton = document.getElementById("downloadButton");
     const clearButton = document.getElementById("clearButton");
+    const swapShellButton = document.getElementById("swapShellButton");
     const statusMessage = document.getElementById("statusMessage");
     const renderDetails = document.getElementById("renderDetails");
+    const editorSurfaceLabel = document.getElementById("editorSurfaceLabel");
+    const previewSurfaceLabel = document.getElementById("previewSurfaceLabel");
+    const themeButtons = Array.from(document.querySelectorAll("[data-theme-option]"));
+    const viewportButtons = Array.from(document.querySelectorAll("[data-viewport-option]"));
 
     const SA11Y_VERSION = "4.4.1";
     const SA11Y_ASSETS = {
@@ -493,6 +645,9 @@
 
     const REFRESH_DELAY = 300;
     let refreshTimer = 0;
+    let previewTheme = "light";
+    let previewViewport = "desktop";
+    let shellTheme = "default";
 
     function setStatus(message, state) {
       statusMessage.textContent = message;
@@ -555,6 +710,7 @@
     }
 
     function buildPreviewDocument(headMarkup, bodyMarkup) {
+      const isDarkTheme = previewTheme === "dark";
       return [
         "<!DOCTYPE html>",
         "<html lang=\"en\">",
@@ -565,11 +721,14 @@
         headMarkup,
         "  <link rel=\"stylesheet\" href=\"" + SA11Y_ASSETS.css + "\">",
         "  <style>",
-        "    html { color-scheme: light; }",
-        "    body { min-height: 100vh; margin: 0; }",
+        "    html { color-scheme: " + (isDarkTheme ? "dark" : "light") + "; }",
+        "    body { min-height: 100vh; margin: 0; background: " + (isDarkTheme ? "#0f172a" : "#ffffff") + "; color: " + (isDarkTheme ? "#f8fafc" : "#0f172a") + "; }",
+        "    #playground-root { min-height: 100vh; padding: 0; }",
+        "    body[data-preview-theme='dark'] a { color: #93c5fd; }",
+        "    body[data-preview-theme='light'] a { color: #1d4ed8; }",
         "  </style>",
         "</head>",
-        "<body>",
+        "<body data-preview-theme=\"" + previewTheme + "\">",
         "  <div id=\"playground-root\">" + bodyMarkup + "</div>",
         "  <script src=\"" + SA11Y_ASSETS.lang + "\"><\/script>",
         "  <script src=\"" + SA11Y_ASSETS.script + "\"><\/script>",
@@ -598,8 +757,9 @@
       const bodyMarkup = sanitizedDocument.body ? sanitizedDocument.body.innerHTML : sanitized;
       const previewMarkup = buildPreviewDocument(headMarkup, bodyMarkup);
 
+      preview.dataset.viewport = previewViewport;
       preview.srcdoc = previewMarkup;
-      renderDetails.textContent = "Last render: " + new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit", second: "2-digit" });
+      renderDetails.textContent = previewTheme + " theme, " + previewViewport + " view. Last render: " + new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit", second: "2-digit" });
       setStatus("Preview updated and rescanned.", "success");
     }
 
@@ -636,10 +796,47 @@
       editor.focus();
     }
 
+    function setPressedState(buttons, activeValue, key) {
+      buttons.forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset[key] === activeValue));
+      });
+    }
+
+    function toggleShellTheme() {
+      shellTheme = shellTheme === "default" ? "swapped" : "default";
+      document.body.dataset.shellTheme = shellTheme;
+      const isSwapped = shellTheme === "swapped";
+      swapShellButton.setAttribute("aria-pressed", String(isSwapped));
+      swapShellButton.textContent = isSwapped ? "Restore Surfaces" : "Swap Surfaces";
+      editorSurfaceLabel.textContent = isSwapped ? "Light editing surface" : "Dark editing surface";
+      previewSurfaceLabel.textContent = isSwapped ? "Dark preview surface" : "Light preview surface";
+      setStatus(isSwapped ? "Editor and preview surfaces swapped." : "Default editor and preview surfaces restored.", "success");
+    }
+
+    function setPreviewTheme(nextTheme) {
+      previewTheme = nextTheme;
+      setPressedState(themeButtons, previewTheme, "themeOption");
+      queuePreviewRefresh();
+    }
+
+    function setPreviewViewport(nextViewport) {
+      previewViewport = nextViewport;
+      setPressedState(viewportButtons, previewViewport, "viewportOption");
+      preview.dataset.viewport = previewViewport;
+      queuePreviewRefresh();
+    }
+
     editor.addEventListener("input", queuePreviewRefresh);
     copyButton.addEventListener("click", copyCode);
     downloadButton.addEventListener("click", downloadCode);
     clearButton.addEventListener("click", clearEditor);
+    swapShellButton.addEventListener("click", toggleShellTheme);
+    themeButtons.forEach((button) => {
+      button.addEventListener("click", () => setPreviewTheme(button.dataset.themeOption));
+    });
+    viewportButtons.forEach((button) => {
+      button.addEventListener("click", () => setPreviewViewport(button.dataset.viewportOption));
+    });
 
     window.addEventListener("keydown", (event) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "s") {
@@ -648,6 +845,8 @@
       }
     });
 
+    document.body.dataset.shellTheme = shellTheme;
+    preview.dataset.viewport = previewViewport;
     updatePreview();
   </script>
 </body>
