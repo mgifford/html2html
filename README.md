@@ -7,6 +7,7 @@ It gives you:
 - A code editor for writing or pasting HTML and SVG
 - A live preview rendered inside an isolated `iframe`
 - Instant accessibility feedback from [Sa11y](https://sa11y.netlify.app)
+- Automated accessibility checks with axe for the shipped app states
 - Theme controls for light and dark preview modes
 - Viewport controls for desktop, tablet, and mobile testing
 
@@ -92,6 +93,19 @@ You can also serve it from a local static server if you prefer.
 ### Use the hosted version
 
 If GitHub Pages is enabled for the repository, the app can be accessed from the published Pages URL.
+
+## Accessibility verification
+
+This project uses both Sa11y and axe:
+
+- Sa11y provides in-page feedback inside the live preview
+- axe is used as an automated check for the shipped interface and key preview states
+
+To run the automated scan locally:
+
+1. Run `npm install`
+2. Run `npx playwright install chromium`
+3. Run `npm run test:a11y`
 
 ## Project structure
 

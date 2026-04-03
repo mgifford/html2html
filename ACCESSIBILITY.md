@@ -95,6 +95,24 @@ When making changes, review at least the following:
 - Does Sa11y still initialize after preview refreshes?
 - Are there new console errors that could break assistive workflows?
 
+## Automated checks
+
+Accessibility checks should not rely on manual review alone.
+
+This repository now expects axe scans to be part of the delivery workflow:
+
+- Run `npm run test:a11y` before pushing when the local environment is set up
+- Keep the GitHub Actions accessibility workflow passing
+- Fix reported axe issues before push unless the user explicitly accepts an exception
+
+The automated scan currently covers:
+
+- The parent application shell
+- The parent shell in light mode
+- The default preview
+- The dark preview
+- The mobile preview
+
 ## Relationship to AGENTS.md
 
 Agents and contributors should treat this file as a companion to [AGENTS.md](/Users/mike.gifford/html2html/AGENTS.md).

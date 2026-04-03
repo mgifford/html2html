@@ -627,6 +627,10 @@
               <button type="button" data-viewport-option="tablet" aria-pressed="false">Tablet</button>
               <button type="button" data-viewport-option="mobile" aria-pressed="false">Mobile</button>
             </div>
+            <div class="segmented-control" role="group" aria-label="Sa11y dock position">
+              <button type="button" data-sa11y-option="right" aria-pressed="true">Sa11y Right</button>
+              <button type="button" data-sa11y-option="left" aria-pressed="false">Sa11y Left</button>
+            </div>
           </div>
           <span class="panel__subtle" id="renderDetails">Waiting for input…</span>
         </div>
@@ -658,6 +662,7 @@
     const previewSurfaceLabel = document.getElementById("previewSurfaceLabel");
     const themeButtons = Array.from(document.querySelectorAll("[data-theme-option]"));
     const viewportButtons = Array.from(document.querySelectorAll("[data-viewport-option]"));
+    const sa11yButtons = Array.from(document.querySelectorAll("[data-sa11y-option]"));
 
     const SA11Y_VERSION = "4.4.1";
     const SA11Y_ASSETS = {
@@ -670,6 +675,7 @@
     let refreshTimer = 0;
     let previewTheme = "light";
     let previewViewport = "desktop";
+    let sa11yPosition = "right";
     let appTheme = "dark";
 
     function setStatus(message, state) {
@@ -736,7 +742,7 @@
       const isDarkTheme = previewTheme === "dark";
       return [
         "<!DOCTYPE html>",
-        "<html lang=\"en\">",
+        "<html lang=\"en\" data-sa11y-theme=\"" + previewTheme + "\">",
         "<head>",
         "  <meta charset=\"UTF-8\">",
         "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">",
@@ -749,9 +755,12 @@
         "    #playground-root { min-height: 100vh; padding: 0; }",
         "    body[data-preview-theme='dark'] a { color: #93c5fd; }",
         "    body[data-preview-theme='light'] a { color: #1d4ed8; }",
+        "    sa11y-control-panel { position: fixed !important; top: auto !important; bottom: 18px !important; z-index: 2147483647 !important; }",
+        "    body[data-sa11y-position='right'] sa11y-control-panel { right: 18px !important; left: auto !important; }",
+        "    body[data-sa11y-position='left'] sa11y-control-panel { left: 18px !important; right: auto !important; }",
         "  </style>",
         "</head>",
-        "<body data-preview-theme=\"" + previewTheme + "\">",
+        "<body data-preview-theme=\"" + previewTheme + "\" data-sa11y-position=\"" + sa11yPosition + "\">",
         "  <div id=\"playground-root\">" + bodyMarkup + "</div>",
         "  <script src=\"" + SA11Y_ASSETS.lang + "\"><\/script>",
         "  <script src=\"" + SA11Y_ASSETS.script + "\"><\/script>",
@@ -760,7 +769,14 @@
         "      try {",
         "        if (window.Sa11y && window.Sa11yLangEn) {",
         "          Sa11y.Lang.addI18n(Sa11yLangEn.strings);",
-        "          window.__sa11y = new Sa11y.Sa11y({ checkRoot: '#playground-root' });",
+        "          window.__sa11y = new Sa11y.Sa11y({ checkRoot: '#playground-root', panelPosition: '" + sa11yPosition + "', showMovePanelToggle: true, developerChecksOnByDefault: true });",
+        "          window.setTimeout(function () {",
+        "            var panel = document.querySelector('sa11y-control-panel');",
+        "            var toggle = panel && panel.shadowRoot && panel.shadowRoot.getElementById('toggle');",
+        "            if (toggle && panel.shadowRoot && !panel.shadowRoot.querySelector('.active')) {",
+        "              toggle.click();",
+        "            }",
+        "          }, 180);",
         "        }",
         "      } catch (error) {",
         "        console.error('Sa11y initialization failed:', error);",
@@ -782,7 +798,7 @@
 
       preview.dataset.viewport = previewViewport;
       preview.srcdoc = previewMarkup;
-      renderDetails.textContent = previewTheme + " theme, " + previewViewport + " view. Last render: " + new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit", second: "2-digit" });
+      renderDetails.textContent = previewTheme + " theme, " + previewViewport + " view, Sa11y docked " + sa11yPosition + ". Last render: " + new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit", second: "2-digit" });
       setStatus("Preview updated and rescanned.", "success");
     }
 
@@ -855,6 +871,12 @@
       queuePreviewRefresh();
     }
 
+    function setSa11yPosition(nextPosition) {
+      sa11yPosition = nextPosition;
+      setPressedState(sa11yButtons, sa11yPosition, "sa11yOption");
+      queuePreviewRefresh();
+    }
+
     editor.addEventListener("input", queuePreviewRefresh);
     copyButton.addEventListener("click", copyCode);
     downloadButton.addEventListener("click", downloadCode);
@@ -866,6 +888,9 @@
     viewportButtons.forEach((button) => {
       button.addEventListener("click", () => setPreviewViewport(button.dataset.viewportOption));
     });
+    sa11yButtons.forEach((button) => {
+      button.addEventListener("click", () => setSa11yPosition(button.dataset.sa11yOption));
+    });
 
     window.addEventListener("keydown", (event) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "s") {
@@ -876,6 +901,7 @@
 
     syncAppThemeUI();
     preview.dataset.viewport = previewViewport;
+    setPressedState(sa11yButtons, sa11yPosition, "sa11yOption");
     updatePreview();
   </script>
 </body>

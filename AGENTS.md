@@ -35,12 +35,20 @@ Open the app directly:
 
 Or serve it locally with any static server if needed.
 
+For automated accessibility verification:
+
+- Run `npm install`
+- Run `npx playwright install chromium`
+- Run `npm run test:a11y`
+
 ## Important files
 
 - [index.html](/Users/mike.gifford/html2html/index.html): complete app UI, styles, and JavaScript
 - [README.md](/Users/mike.gifford/html2html/README.md): human-facing project overview and use cases
 - [AGENTS.md](/Users/mike.gifford/html2html/AGENTS.md): agent-facing workflow and project instructions
 - [ACCESSIBILITY.md](/Users/mike.gifford/html2html/ACCESSIBILITY.md): accessibility statement and project-specific accessibility expectations
+- [.github/workflows/accessibility.yml](/Users/mike.gifford/html2html/.github/workflows/accessibility.yml): CI axe scan
+- [scripts/axe-scan.mjs](/Users/mike.gifford/html2html/scripts/axe-scan.mjs): local axe scan for the app shell and preview states
 
 ## Code style
 
@@ -114,11 +122,16 @@ Useful manual checks include:
 - Confirm no obvious console errors were introduced
 - Confirm GitHub Pages compatibility is preserved
 
+Required automated check before pushing when dependencies are available:
+
+- Run `npm run test:a11y` and fix any reported axe violations before pushing
+
 ## Git and deployment notes
 
 - The repository uses GitHub and may be published via GitHub Pages
 - Avoid breaking the static-file deployment model
 - If pushing changes, prefer clear commit messages describing the user-visible fix
+- Accessibility CI should stay green; do not bypass axe failures without explicit user direction
 
 ## When unsure
 
