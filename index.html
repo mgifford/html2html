@@ -136,68 +136,81 @@
       color: #0d1728;
     }
 
-    body[data-shell-theme="swapped"] .panel:first-child {
+    body[data-app-theme="light"] {
+      background:
+        radial-gradient(circle at top left, rgba(61, 201, 162, 0.12), transparent 28%),
+        radial-gradient(circle at top right, rgba(115, 157, 255, 0.12), transparent 30%),
+        linear-gradient(180deg, #eef4fb 0%, #dde7f4 100%);
+      color: #0d1728;
+    }
+
+    body[data-app-theme="light"] .hero {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(239, 245, 252, 0.96));
+      border-color: rgba(13, 23, 40, 0.12);
+    }
+
+    body[data-app-theme="light"] .eyebrow {
+      background: rgba(29, 78, 216, 0.08);
+      color: #1d4ed8;
+    }
+
+    body[data-app-theme="light"] .hero p,
+    body[data-app-theme="light"] .meta__chip {
+      color: #53627a;
+    }
+
+    body[data-app-theme="light"] .meta__chip {
+      border-color: rgba(13, 23, 40, 0.12);
+      background: rgba(255, 255, 255, 0.58);
+    }
+
+    body[data-app-theme="light"] .panel:first-child {
       background: linear-gradient(180deg, #f8fbff 0%, #eef3fb 100%);
       color: #0d1728;
     }
 
-    body[data-shell-theme="swapped"] .panel:first-child .panel__header,
-    body[data-shell-theme="swapped"] .panel:first-child .panel__toolbar {
+    body[data-app-theme="light"] .panel:first-child .panel__header,
+    body[data-app-theme="light"] .panel:first-child .panel__toolbar {
       border-color: rgba(13, 23, 40, 0.1);
     }
 
-    body[data-shell-theme="swapped"] .panel:first-child .panel__description,
-    body[data-shell-theme="swapped"] .panel:first-child .panel__subtle,
-    body[data-shell-theme="swapped"] .panel:first-child .status {
+    body[data-app-theme="light"] .panel:first-child .panel__description,
+    body[data-app-theme="light"] .panel:first-child .panel__subtle,
+    body[data-app-theme="light"] .panel:first-child .status {
       color: #53627a;
     }
 
-    body[data-shell-theme="swapped"] .panel:first-child button {
+    body[data-app-theme="light"] .panel:first-child button {
       background: rgba(13, 23, 40, 0.04);
       color: #0d1728;
       border-color: rgba(13, 23, 40, 0.12);
     }
 
-    body[data-shell-theme="swapped"] .panel:first-child .button--accent {
+    body[data-app-theme="light"] .panel:first-child .button--accent {
       background: linear-gradient(135deg, var(--accent), var(--accent-strong));
       color: #041019;
       border-color: transparent;
     }
 
-    body[data-shell-theme="swapped"] .panel:first-child .button--danger {
+    body[data-app-theme="light"] .panel:first-child .button--danger {
       color: #9a2037;
       border-color: rgba(255, 122, 144, 0.28);
       background: rgba(255, 122, 144, 0.12);
     }
 
-    body[data-shell-theme="swapped"] .panel:first-child .editor-shell {
+    body[data-app-theme="light"] .panel:first-child .editor-shell {
       background:
         linear-gradient(180deg, rgba(13, 23, 40, 0.02), transparent),
         linear-gradient(135deg, rgba(102, 140, 255, 0.06), transparent 45%);
     }
 
-    body[data-shell-theme="swapped"] .panel:first-child textarea {
+    body[data-app-theme="light"] .panel:first-child textarea {
       color: #0d1728;
       caret-color: #1d4ed8;
     }
 
-    body[data-shell-theme="swapped"] .panel:first-child textarea::selection {
+    body[data-app-theme="light"] .panel:first-child textarea::selection {
       background: rgba(29, 78, 216, 0.16);
-    }
-
-    body[data-shell-theme="swapped"] .panel--preview {
-      background: linear-gradient(180deg, rgba(19, 32, 58, 0.96), rgba(9, 17, 31, 0.98));
-      color: var(--text);
-    }
-
-    body[data-shell-theme="swapped"] .panel--preview .panel__header,
-    body[data-shell-theme="swapped"] .panel--preview .panel__toolbar {
-      border-color: var(--border);
-    }
-
-    body[data-shell-theme="swapped"] .panel--preview .panel__description,
-    body[data-shell-theme="swapped"] .panel--preview .panel__subtle {
-      color: var(--text-muted);
     }
 
     .panel__header,
@@ -335,22 +348,6 @@
       border-color: rgba(29, 78, 216, 0.28);
     }
 
-    body[data-shell-theme="swapped"] .panel--preview .segmented-control {
-      border-color: var(--border);
-      background: rgba(255, 255, 255, 0.04);
-    }
-
-    body[data-shell-theme="swapped"] .panel--preview .segmented-control button {
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text);
-      border-color: var(--border-strong);
-    }
-
-    body[data-shell-theme="swapped"] .panel--preview .segmented-control button[aria-pressed="true"] {
-      background: rgba(117, 224, 192, 0.18);
-      border-color: rgba(117, 224, 192, 0.45);
-    }
-
     .editor-shell {
       min-height: 0;
       position: relative;
@@ -388,12 +385,6 @@
       display: flex;
       justify-content: center;
       align-items: flex-start;
-    }
-
-    body[data-shell-theme="swapped"] .panel--preview .preview-shell {
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
-        linear-gradient(90deg, rgba(117, 224, 192, 0.06), transparent 20%);
     }
 
     iframe {
@@ -434,6 +425,33 @@
       clip: rect(0, 0, 0, 0);
       white-space: nowrap;
       border: 0;
+    }
+
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-width: 56px;
+      min-height: 56px;
+      padding: 0 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      box-shadow: var(--shadow);
+      font-size: 1.2rem;
+    }
+
+    .theme-toggle__label {
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    body[data-app-theme="light"] .theme-toggle {
+      border-color: rgba(13, 23, 40, 0.12);
+      background: rgba(255, 255, 255, 0.72);
+      color: #0d1728;
     }
 
     @media (max-width: 920px) {
@@ -485,6 +503,10 @@
         </p>
       </div>
       <div class="meta" aria-label="Playground details">
+        <button class="theme-toggle" id="appThemeToggle" type="button" aria-pressed="false" aria-label="Switch parent page to light mode">
+          <span aria-hidden="true" id="appThemeIcon">☀</span>
+          <span class="theme-toggle__label" id="appThemeLabel">Light UI</span>
+        </button>
         <span class="meta__chip">Responsive split layout</span>
         <span class="meta__chip">300ms debounced preview</span>
         <span class="meta__chip">Inline SVG supported</span>
@@ -506,7 +528,6 @@
             <button class="button--accent" id="copyButton" type="button">Copy Code</button>
             <button id="downloadButton" type="button">Download as HTML</button>
             <button class="button--danger" id="clearButton" type="button">Clear Editor</button>
-            <button id="swapShellButton" type="button" aria-pressed="false">Swap Surfaces</button>
           </div>
           <output class="status" id="statusMessage" aria-live="polite">Ready.</output>
         </div>
@@ -628,7 +649,9 @@
     const copyButton = document.getElementById("copyButton");
     const downloadButton = document.getElementById("downloadButton");
     const clearButton = document.getElementById("clearButton");
-    const swapShellButton = document.getElementById("swapShellButton");
+    const appThemeToggle = document.getElementById("appThemeToggle");
+    const appThemeIcon = document.getElementById("appThemeIcon");
+    const appThemeLabel = document.getElementById("appThemeLabel");
     const statusMessage = document.getElementById("statusMessage");
     const renderDetails = document.getElementById("renderDetails");
     const editorSurfaceLabel = document.getElementById("editorSurfaceLabel");
@@ -647,7 +670,7 @@
     let refreshTimer = 0;
     let previewTheme = "light";
     let previewViewport = "desktop";
-    let shellTheme = "default";
+    let appTheme = "dark";
 
     function setStatus(message, state) {
       statusMessage.textContent = message;
@@ -802,15 +825,21 @@
       });
     }
 
-    function toggleShellTheme() {
-      shellTheme = shellTheme === "default" ? "swapped" : "default";
-      document.body.dataset.shellTheme = shellTheme;
-      const isSwapped = shellTheme === "swapped";
-      swapShellButton.setAttribute("aria-pressed", String(isSwapped));
-      swapShellButton.textContent = isSwapped ? "Restore Surfaces" : "Swap Surfaces";
-      editorSurfaceLabel.textContent = isSwapped ? "Light editing surface" : "Dark editing surface";
-      previewSurfaceLabel.textContent = isSwapped ? "Dark preview surface" : "Light preview surface";
-      setStatus(isSwapped ? "Editor and preview surfaces swapped." : "Default editor and preview surfaces restored.", "success");
+    function syncAppThemeUI() {
+      const isLight = appTheme === "light";
+      document.body.dataset.appTheme = appTheme;
+      appThemeToggle.setAttribute("aria-pressed", String(isLight));
+      appThemeToggle.setAttribute("aria-label", isLight ? "Switch parent page to dark mode" : "Switch parent page to light mode");
+      appThemeIcon.textContent = isLight ? "🌙" : "☀";
+      appThemeLabel.textContent = isLight ? "Dark UI" : "Light UI";
+      editorSurfaceLabel.textContent = isLight ? "Light editing surface" : "Dark editing surface";
+      previewSurfaceLabel.textContent = "Light preview surface";
+    }
+
+    function toggleAppTheme() {
+      appTheme = appTheme === "dark" ? "light" : "dark";
+      syncAppThemeUI();
+      setStatus(appTheme === "light" ? "Parent page switched to light mode." : "Parent page switched to dark mode.", "success");
     }
 
     function setPreviewTheme(nextTheme) {
@@ -830,7 +859,7 @@
     copyButton.addEventListener("click", copyCode);
     downloadButton.addEventListener("click", downloadCode);
     clearButton.addEventListener("click", clearEditor);
-    swapShellButton.addEventListener("click", toggleShellTheme);
+    appThemeToggle.addEventListener("click", toggleAppTheme);
     themeButtons.forEach((button) => {
       button.addEventListener("click", () => setPreviewTheme(button.dataset.themeOption));
     });
@@ -845,7 +874,7 @@
       }
     });
 
-    document.body.dataset.shellTheme = shellTheme;
+    syncAppThemeUI();
     preview.dataset.viewport = previewViewport;
     updatePreview();
   </script>
