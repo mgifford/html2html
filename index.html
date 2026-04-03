@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Accessibility Playground</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #09111f;
+      --bg-elevated: #111c31;
+      --bg-panel: #13203a;
+      --bg-panel-2: #18284a;
+      --border: rgba(160, 184, 214, 0.18);
+      --border-strong: rgba(160, 184, 214, 0.3);
+      --text: #f4f8ff;
+      --text-muted: #9eb1d3;
+      --accent: #75e0c0;
+      --accent-strong: #3dc9a2;
+      --danger: #ff7a90;
+      --shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+      --radius: 22px;
+      --radius-sm: 14px;
+      --toolbar-height: 64px;
+      --font-ui: "Space Grotesk", "Segoe UI", sans-serif;
+      --font-code: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at top left, rgba(61, 201, 162, 0.22), transparent 28%),
+        radial-gradient(circle at top right, rgba(115, 157, 255, 0.2), transparent 30%),
+        linear-gradient(180deg, #050b15 0%, #09111f 100%);
+      color: var(--text);
+      font-family: var(--font-ui);
+    }
+
+    body {
+      padding: 24px;
+    }
+
+    .app {
+      min-height: calc(100vh - 48px);
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 18px;
+    }
+
+    .hero {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: end;
+      justify-content: space-between;
+      padding: 22px 24px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, rgba(17, 28, 49, 0.92), rgba(9, 17, 31, 0.9));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .hero__content {
+      max-width: 760px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(117, 224, 192, 0.12);
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 12px 0 10px;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      line-height: 0.96;
+      letter-spacing: -0.04em;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--text-muted);
+      max-width: 62ch;
+      line-height: 1.6;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .meta__chip {
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-muted);
+      font-size: 0.94rem;
+    }
+
+    .workspace {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(320px, 1.1fr) minmax(320px, 1fr);
+      gap: 18px;
+    }
+
+    .panel {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(19, 32, 58, 0.96), rgba(9, 17, 31, 0.98));
+      box-shadow: var(--shadow);
+    }
+
+    .panel--preview {
+      background: linear-gradient(180deg, #f8fbff 0%, #eef3fb 100%);
+      color: #0d1728;
+    }
+
+    .panel__header,
+    .panel__toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 18px;
+    }
+
+    .panel__header {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .panel--preview .panel__header,
+    .panel--preview .panel__toolbar {
+      border-color: rgba(13, 23, 40, 0.1);
+    }
+
+    .panel__header h2 {
+      margin: 0;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+
+    .panel__description {
+      margin: 4px 0 0;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+    }
+
+    .panel--preview .panel__description,
+    .panel--preview .panel__subtle,
+    .panel--preview .status {
+      color: #53627a;
+    }
+
+    .panel__toolbar {
+      min-height: var(--toolbar-height);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .toolbar__group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    button {
+      appearance: none;
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      font: inherit;
+      font-weight: 600;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: transform 140ms ease, background-color 140ms ease, border-color 140ms ease;
+    }
+
+    button:hover,
+    button:focus-visible {
+      transform: translateY(-1px);
+      border-color: rgba(117, 224, 192, 0.45);
+      background: rgba(117, 224, 192, 0.12);
+      outline: none;
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .button--accent {
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: #041019;
+      border-color: transparent;
+    }
+
+    .button--danger {
+      color: #ffd6dd;
+      border-color: rgba(255, 122, 144, 0.34);
+      background: rgba(255, 122, 144, 0.1);
+    }
+
+    .status {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+    }
+
+    .status[data-state="error"] {
+      color: #ffb6c3;
+    }
+
+    .status[data-state="success"] {
+      color: var(--accent);
+    }
+
+    .editor-shell {
+      min-height: 0;
+      position: relative;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
+        linear-gradient(90deg, rgba(117, 224, 192, 0.06), transparent 20%);
+    }
+
+    textarea {
+      width: 100%;
+      height: 100%;
+      min-height: 420px;
+      border: 0;
+      resize: none;
+      padding: 22px 20px 26px;
+      background: transparent;
+      color: #ebf2ff;
+      font: 500 0.95rem/1.7 var(--font-code);
+      tab-size: 2;
+      outline: none;
+      caret-color: var(--accent);
+    }
+
+    textarea::selection {
+      background: rgba(117, 224, 192, 0.28);
+    }
+
+    .preview-shell {
+      min-height: 0;
+      position: relative;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.98)),
+        linear-gradient(135deg, rgba(102, 140, 255, 0.06), transparent 45%);
+      padding: 16px;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      min-height: 420px;
+      border: 1px solid rgba(13, 23, 40, 0.12);
+      border-radius: 18px;
+      background: #ffffff;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+    }
+
+    .panel__subtle {
+      color: var(--text-muted);
+      font-size: 0.86rem;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 920px) {
+      body {
+        padding: 16px;
+      }
+
+      .app {
+        min-height: calc(100vh - 32px);
+      }
+
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .hero,
+      .panel__header,
+      .panel__toolbar {
+        padding: 16px;
+      }
+
+      textarea,
+      iframe {
+        min-height: 360px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="hero" aria-labelledby="app-title">
+      <div class="hero__content">
+        <span class="eyebrow">Live Accessibility Playground</span>
+        <h1 id="app-title">Prototype HTML and SVG, then scan it with Sa11y in real time.</h1>
+        <p>
+          Write markup on the left, watch it render on the right, and let Sa11y rescan each refresh. External
+          stylesheet links are preserved, while user-supplied scripts are blocked for a safer preview environment.
+        </p>
+      </div>
+      <div class="meta" aria-label="Playground details">
+        <span class="meta__chip">Responsive split layout</span>
+        <span class="meta__chip">300ms debounced preview</span>
+        <span class="meta__chip">Inline SVG supported</span>
+      </div>
+    </section>
+
+    <section class="workspace" aria-label="Editor and preview workspace">
+      <section class="panel" aria-labelledby="editor-title">
+        <div class="panel__header">
+          <div>
+            <h2 id="editor-title">HTML / SVG Editor</h2>
+            <p class="panel__description">Paste a full document or a fragment. CSS links in the markup are applied to the preview.</p>
+          </div>
+          <span class="panel__subtle">Dark editing surface</span>
+        </div>
+
+        <div class="panel__toolbar">
+          <div class="toolbar__group">
+            <button class="button--accent" id="copyButton" type="button">Copy Code</button>
+            <button id="downloadButton" type="button">Download as HTML</button>
+            <button class="button--danger" id="clearButton" type="button">Clear Editor</button>
+          </div>
+          <output class="status" id="statusMessage" aria-live="polite">Ready.</output>
+        </div>
+
+        <div class="editor-shell">
+          <label class="sr-only" for="editor">HTML and SVG source</label>
+          <textarea id="editor" spellcheck="false" aria-describedby="editor-title"><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Accessible Card Demo</title>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+  />
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: linear-gradient(135deg, #f8fafc, #eef6ff);
+      padding: 2rem;
+    }
+
+    .card-demo {
+      max-width: 42rem;
+      margin: 0 auto;
+    }
+
+    .hero-icon {
+      width: 72px;
+      height: 72px;
+    }
+  </style>
+</head>
+<body>
+  <main class="card shadow-sm rounded-4 border-0 card-demo">
+    <div class="card-body p-4 p-md-5">
+      <div class="d-flex align-items-center gap-3 mb-4">
+        <svg
+          class="hero-icon"
+          viewBox="0 0 72 72"
+          role="img"
+          aria-labelledby="sparkTitle"
+        >
+          <title id="sparkTitle">Decorative accessibility spark</title>
+          <defs>
+            <linearGradient id="sparkGradient" x1="0%" x2="100%" y1="0%" y2="100%">
+              <stop offset="0%" stop-color="#1d4ed8"></stop>
+              <stop offset="100%" stop-color="#0ea5e9"></stop>
+            </linearGradient>
+          </defs>
+          <rect x="6" y="6" width="60" height="60" rx="18" fill="url(#sparkGradient)"></rect>
+          <path
+            d="M35 18l4 12h12l-10 7 4 12-10-7-10 7 4-12-10-7h12z"
+            fill="#fff"
+          ></path>
+        </svg>
+        <div>
+          <h1 class="h2 mb-1">Accessibility playground starter</h1>
+          <p class="text-secondary mb-0">Edit this example and let Sa11y point out issues as you go.</p>
+        </div>
+      </div>
+
+      <form class="vstack gap-3">
+        <div>
+          <label class="form-label" for="email">Email address</label>
+          <input class="form-control" id="email" type="email" placeholder="name@example.com" />
+        </div>
+        <div>
+          <button class="btn btn-primary" type="submit">Subscribe</button>
+        </div>
+      </form>
+    </div>
+  </main>
+</body>
+</html></textarea>
+        </div>
+      </section>
+
+      <section class="panel panel--preview" aria-labelledby="preview-title">
+        <div class="panel__header">
+          <div>
+            <h2 id="preview-title">Live Preview</h2>
+            <p class="panel__description">The iframe is rebuilt from sanitized markup and Sa11y is injected after each refresh.</p>
+          </div>
+          <span class="panel__subtle">Light preview surface</span>
+        </div>
+
+        <div class="panel__toolbar">
+          <div class="toolbar__group">
+            <span class="panel__subtle">User scripts blocked. Internal Sa11y allowed.</span>
+          </div>
+          <span class="panel__subtle" id="renderDetails">Waiting for input…</span>
+        </div>
+
+        <div class="preview-shell">
+          <iframe
+            id="preview"
+            title="Live HTML preview with Sa11y accessibility checker"
+            sandbox="allow-same-origin allow-scripts"
+            referrerpolicy="no-referrer"
+          ></iframe>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const editor = document.getElementById("editor");
+    const preview = document.getElementById("preview");
+    const copyButton = document.getElementById("copyButton");
+    const downloadButton = document.getElementById("downloadButton");
+    const clearButton = document.getElementById("clearButton");
+    const statusMessage = document.getElementById("statusMessage");
+    const renderDetails = document.getElementById("renderDetails");
+
+    const SA11Y_VERSION = "4.4.1";
+    const SA11Y_ASSETS = {
+      css: "https://cdn.jsdelivr.net/gh/ryersondmp/sa11y@" + SA11Y_VERSION + "/dist/css/sa11y.min.css",
+      lang: "https://cdn.jsdelivr.net/gh/ryersondmp/sa11y@" + SA11Y_VERSION + "/dist/js/lang/en.umd.js",
+      script: "https://cdn.jsdelivr.net/gh/ryersondmp/sa11y@" + SA11Y_VERSION + "/dist/js/sa11y.umd.min.js"
+    };
+
+    const REFRESH_DELAY = 300;
+    let refreshTimer = 0;
+
+    function setStatus(message, state) {
+      statusMessage.textContent = message;
+      statusMessage.dataset.state = state || "idle";
+    }
+
+    function containsFullDocument(markup) {
+      return /<html[\s>]/i.test(markup) || /<!doctype/i.test(markup);
+    }
+
+    function sanitizeMarkup(input) {
+      const parser = new DOMParser();
+      const trimmed = input.trim();
+      const markup = containsFullDocument(trimmed)
+        ? trimmed
+        : "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"></head><body>" + trimmed + "</body></html>";
+
+      const doc = parser.parseFromString(markup, "text/html");
+
+      doc.querySelectorAll("script, iframe[srcdoc], object, embed").forEach((node) => node.remove());
+
+      doc.querySelectorAll("*").forEach((node) => {
+        Array.from(node.attributes).forEach((attribute) => {
+          const name = attribute.name.toLowerCase();
+          const value = attribute.value.trim();
+
+          if (name.startsWith("on")) {
+            node.removeAttribute(attribute.name);
+          }
+
+          if ((name === "href" || name === "src" || name === "xlink:href") && /^javascript:/i.test(value)) {
+            node.removeAttribute(attribute.name);
+          }
+        });
+      });
+
+      doc.querySelectorAll('link[rel~="stylesheet"]').forEach((link) => {
+        if (!link.getAttribute("href")) {
+          link.remove();
+        }
+      });
+
+      doc.querySelectorAll("link:not([rel~=\"stylesheet\"]), base, meta[http-equiv]").forEach((node) => node.remove());
+      doc.documentElement.setAttribute("lang", doc.documentElement.getAttribute("lang") || "en");
+
+      if (!doc.head.querySelector('meta[name="color-scheme"]')) {
+        const colorScheme = doc.createElement("meta");
+        colorScheme.name = "color-scheme";
+        colorScheme.content = "light";
+        doc.head.appendChild(colorScheme);
+      }
+
+      if (!doc.head.querySelector("title")) {
+        const title = doc.createElement("title");
+        title.textContent = "Live Accessibility Playground Preview";
+        doc.head.appendChild(title);
+      }
+
+      return "<!DOCTYPE html>\n" + doc.documentElement.outerHTML;
+    }
+
+    function buildPreviewDocument(headMarkup, bodyMarkup) {
+      return [
+        "<!DOCTYPE html>",
+        "<html lang=\"en\">",
+        "<head>",
+        "  <meta charset=\"UTF-8\">",
+        "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">",
+        "  <meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'self' https: data: blob:; img-src https: data: blob:; media-src https: data: blob:; font-src https: data:; style-src 'unsafe-inline' https:; connect-src https:; script-src https://cdn.jsdelivr.net; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'self';\">",
+        headMarkup,
+        "  <link rel=\"stylesheet\" href=\"" + SA11Y_ASSETS.css + "\">",
+        "  <style>",
+        "    html { color-scheme: light; }",
+        "    body { min-height: 100vh; margin: 0; }",
+        "  </style>",
+        "</head>",
+        "<body>",
+        "  <div id=\"playground-root\">" + bodyMarkup + "</div>",
+        "  <script src=\"" + SA11Y_ASSETS.lang + "\"></script>",
+        "  <script src=\"" + SA11Y_ASSETS.script + "\"></script>",
+        "  <script>",
+        "    window.addEventListener('load', function () {",
+        "      try {",
+        "        if (window.Sa11y && window.Sa11yLangEn) {",
+        "          Sa11y.Lang.addI18n(Sa11yLangEn.strings);",
+        "          window.__sa11y = new Sa11y.Sa11y({ checkRoot: '#playground-root' });",
+        "        }",
+        "      } catch (error) {",
+        "        console.error('Sa11y initialization failed:', error);",
+        "      }",
+        "    });",
+        "  </script>",
+        "</body>",
+        "</html>"
+      ].join("\n");
+    }
+
+    function updatePreview() {
+      const sanitized = sanitizeMarkup(editor.value);
+      const parser = new DOMParser();
+      const sanitizedDocument = parser.parseFromString(sanitized, "text/html");
+      const headMarkup = sanitizedDocument.head ? sanitizedDocument.head.innerHTML : "";
+      const bodyMarkup = sanitizedDocument.body ? sanitizedDocument.body.innerHTML : sanitized;
+      const previewMarkup = buildPreviewDocument(headMarkup, bodyMarkup);
+
+      preview.srcdoc = previewMarkup;
+      renderDetails.textContent = "Last render: " + new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit", second: "2-digit" });
+      setStatus("Preview updated and rescanned.", "success");
+    }
+
+    function queuePreviewRefresh() {
+      window.clearTimeout(refreshTimer);
+      setStatus("Updating preview…", "idle");
+      refreshTimer = window.setTimeout(updatePreview, REFRESH_DELAY);
+    }
+
+    async function copyCode() {
+      try {
+        await navigator.clipboard.writeText(editor.value);
+        setStatus("Code copied to clipboard.", "success");
+      } catch (error) {
+        setStatus("Clipboard copy failed in this browser.", "error");
+      }
+    }
+
+    function downloadCode() {
+      const blob = new Blob([editor.value], { type: "text/html;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = "accessibility-playground.html";
+      anchor.click();
+      URL.revokeObjectURL(url);
+      setStatus("HTML file downloaded.", "success");
+    }
+
+    function clearEditor() {
+      editor.value = "";
+      queuePreviewRefresh();
+      setStatus("Editor cleared.", "success");
+      editor.focus();
+    }
+
+    editor.addEventListener("input", queuePreviewRefresh);
+    copyButton.addEventListener("click", copyCode);
+    downloadButton.addEventListener("click", downloadCode);
+    clearButton.addEventListener("click", clearEditor);
+
+    window.addEventListener("keydown", (event) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "s") {
+        event.preventDefault();
+        downloadCode();
+      }
+    });
+
+    updatePreview();
+  </script>
+</body>
+</html>
