@@ -30,6 +30,10 @@
       box-sizing: border-box;
     }
 
+    [hidden] {
+      display: none !important;
+    }
+
     html,
     body {
       margin: 0;
@@ -816,8 +820,8 @@
 
     <section class="metrics" aria-label="HTML metrics">
       <div class="firefox-banner" id="firefoxBanner" hidden>
-        <span>🦊 You're using Firefox — the <a href="https://fershad.com/writing/co2e-estimates-in-firefox-profiler/" rel="noopener noreferrer">Firefox Profiler</a> includes CO2 estimates for page loads.</span>
-        <button type="button" id="dismissFirefoxBanner" aria-label="Dismiss Firefox tip">✕</button>
+        <span aria-live="polite">🦊 CO2 estimate for this preview: <strong id="firefoxCO2">—</strong> <small>(SWD model, HTML bytes only)</small></span>
+        <button type="button" id="dismissFirefoxBanner" aria-label="Dismiss Firefox CO2 estimate">✕</button>
       </div>
       <div class="metrics__chips" id="metricsChips" aria-live="polite" aria-label="Markup statistics">
         <span class="metric-chip" id="metricBytes">—</span>
@@ -855,6 +859,7 @@
     const previewSurfaceLabel = document.getElementById("previewSurfaceLabel");
     const firefoxBanner = document.getElementById("firefoxBanner");
     const dismissFirefoxBanner = document.getElementById("dismissFirefoxBanner");
+    const firefoxCO2 = document.getElementById("firefoxCO2");
     const metricBytes = document.getElementById("metricBytes");
     const metricElements = document.getElementById("metricElements");
     const metricImages = document.getElementById("metricImages");
@@ -881,6 +886,19 @@
     let appTheme = "dark";
 
     const isFirefox = /firefox/i.test(navigator.userAgent); // UA sniff is intentional: Firefox Profiler CO2 feature is Firefox-only
+
+    // Sustainable Web Design model constants (https://sustainablewebdesign.org/estimating-digital-emissions/)
+    const SWD_KWH_PER_GB = 0.81;       // kWh per GB transferred across the full system
+    const SWD_GRID_INTENSITY = 442;     // g CO2 per kWh (global average)
+    const BYTES_PER_GB = 1024 * 1024 * 1024;
+    const CO2_G_PER_BYTE = (SWD_KWH_PER_GB * SWD_GRID_INTENSITY) / BYTES_PER_GB;
+
+    function formatCO2(bytes) {
+      const g = bytes * CO2_G_PER_BYTE;
+      if (g < 0.001) return (g * 1e6).toFixed(2) + "\u00a0\u03bcg CO\u2082";
+      if (g < 1)    return (g * 1e3).toFixed(2) + "\u00a0mg CO\u2082";
+      return g.toFixed(3) + "\u00a0g CO\u2082";
+    }
 
     const DEPRECATED_ELEMENTS = ["font", "center", "blink", "marquee", "applet", "basefont", "big", "strike", "tt"];
 
@@ -1014,6 +1032,10 @@
         suggestionsDetails.hidden = false;
       } else {
         suggestionsDetails.hidden = true;
+      }
+
+      if (isFirefox) {
+        firefoxCO2.textContent = formatCO2(rawBytes);
       }
     }
 
