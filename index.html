@@ -49,7 +49,7 @@
     .app {
       min-height: calc(100vh - 48px);
       display: grid;
-      grid-template-rows: auto 1fr;
+      grid-template-rows: auto 1fr auto;
       gap: 18px;
     }
 
@@ -489,6 +489,174 @@
         animation-iteration-count: 1 !important;
       }
     }
+
+    .metrics {
+      padding: 16px 20px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(19, 32, 58, 0.96), rgba(9, 17, 31, 0.98));
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .metrics__chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .metric-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-muted);
+      font-size: 0.86rem;
+    }
+
+    .metric-chip--warn {
+      border-color: rgba(255, 200, 80, 0.35);
+      background: rgba(255, 200, 80, 0.08);
+      color: #ffd166;
+    }
+
+    .metric-chip--info {
+      border-color: rgba(117, 224, 192, 0.3);
+      background: rgba(117, 224, 192, 0.07);
+      color: var(--accent);
+    }
+
+    .metric-chip a {
+      color: inherit;
+      text-underline-offset: 2px;
+    }
+
+    #metricDynamic {
+      display: contents;
+    }
+
+    .suggestions {
+      margin: 0;
+      border: 0;
+    }
+
+    .suggestions summary {
+      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      padding: 2px 0;
+      user-select: none;
+    }
+
+    .suggestions summary:hover {
+      color: var(--text);
+    }
+
+    .suggestions ul {
+      margin: 8px 0 0;
+      padding: 0 0 0 1.4em;
+      color: var(--text-muted);
+      font-size: 0.86rem;
+      line-height: 1.75;
+    }
+
+    .firefox-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255, 165, 50, 0.3);
+      background: rgba(255, 165, 50, 0.07);
+      color: var(--text);
+      font-size: 0.88rem;
+    }
+
+    .firefox-banner a {
+      color: #ffca6e;
+      text-underline-offset: 2px;
+    }
+
+    .firefox-banner button {
+      flex-shrink: 0;
+      padding: 3px 9px;
+      min-height: 0;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      border-radius: 6px;
+    }
+
+    .app-footer {
+      padding: 14px 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.84rem;
+    }
+
+    .app-footer p {
+      margin: 0;
+    }
+
+    .app-footer a {
+      color: var(--accent);
+      text-underline-offset: 2px;
+    }
+
+    body[data-app-theme="light"] .metrics {
+      background: linear-gradient(180deg, #f8fbff 0%, #eef3fb 100%);
+    }
+
+    body[data-app-theme="light"] .metric-chip {
+      border-color: rgba(13, 23, 40, 0.12);
+      background: rgba(255, 255, 255, 0.58);
+      color: #53627a;
+    }
+
+    body[data-app-theme="light"] .metric-chip--warn {
+      border-color: rgba(160, 100, 0, 0.3);
+      background: rgba(160, 100, 0, 0.07);
+      color: #7a4b00;
+    }
+
+    body[data-app-theme="light"] .metric-chip--info {
+      border-color: rgba(29, 78, 216, 0.2);
+      background: rgba(29, 78, 216, 0.06);
+      color: #1d4ed8;
+    }
+
+    body[data-app-theme="light"] .suggestions summary,
+    body[data-app-theme="light"] .suggestions ul {
+      color: #53627a;
+    }
+
+    body[data-app-theme="light"] .suggestions summary:hover {
+      color: #0d1728;
+    }
+
+    body[data-app-theme="light"] .firefox-banner {
+      border-color: rgba(160, 90, 0, 0.25);
+      background: rgba(160, 90, 0, 0.06);
+      color: #0d1728;
+    }
+
+    body[data-app-theme="light"] .firefox-banner a {
+      color: #8a5000;
+    }
+
+    body[data-app-theme="light"] .app-footer {
+      color: #53627a;
+    }
+
+    body[data-app-theme="light"] .app-footer a {
+      color: #1d4ed8;
+    }
   </style>
 </head>
 <body>
@@ -645,7 +813,32 @@
         </div>
       </section>
     </section>
+
+    <section class="metrics" aria-label="HTML metrics">
+      <div class="firefox-banner" id="firefoxBanner" hidden>
+        <span>🦊 You're using Firefox — the <a href="https://fershad.com/writing/co2e-estimates-in-firefox-profiler/" rel="noopener noreferrer">Firefox Profiler</a> includes CO2 estimates for page loads.</span>
+        <button type="button" id="dismissFirefoxBanner" aria-label="Dismiss Firefox tip">✕</button>
+      </div>
+      <div class="metrics__chips" id="metricsChips" aria-live="polite" aria-label="Markup statistics">
+        <span class="metric-chip" id="metricBytes">—</span>
+        <span class="metric-chip" id="metricElements">—</span>
+        <span class="metric-chip" id="metricImages">—</span>
+        <span id="metricDynamic"></span>
+      </div>
+      <details class="suggestions" id="suggestionsDetails" hidden>
+        <summary>Suggestions (<span id="suggestionCount">0</span>)</summary>
+        <ul id="suggestionsList"></ul>
+      </details>
+    </section>
   </main>
+
+  <footer class="app-footer">
+    <p>
+      <a href="https://github.com/mgifford/html2html" rel="noopener noreferrer">html2html</a> —
+      open-source live accessibility playground.
+      <a href="https://sa11y.netlify.app/" rel="noopener noreferrer">Sa11y</a> by Ryerson Digital Media Zone.
+    </p>
+  </footer>
 
   <script>
     const editor = document.getElementById("editor");
@@ -660,6 +853,15 @@
     const renderDetails = document.getElementById("renderDetails");
     const editorSurfaceLabel = document.getElementById("editorSurfaceLabel");
     const previewSurfaceLabel = document.getElementById("previewSurfaceLabel");
+    const firefoxBanner = document.getElementById("firefoxBanner");
+    const dismissFirefoxBanner = document.getElementById("dismissFirefoxBanner");
+    const metricBytes = document.getElementById("metricBytes");
+    const metricElements = document.getElementById("metricElements");
+    const metricImages = document.getElementById("metricImages");
+    const metricDynamic = document.getElementById("metricDynamic");
+    const suggestionsDetails = document.getElementById("suggestionsDetails");
+    const suggestionCount = document.getElementById("suggestionCount");
+    const suggestionsList = document.getElementById("suggestionsList");
     const themeButtons = Array.from(document.querySelectorAll("[data-theme-option]"));
     const viewportButtons = Array.from(document.querySelectorAll("[data-viewport-option]"));
     const sa11yButtons = Array.from(document.querySelectorAll("[data-sa11y-option]"));
@@ -677,6 +879,143 @@
     let previewViewport = "desktop";
     let sa11yPosition = "right";
     let appTheme = "dark";
+
+    const isFirefox = /firefox/i.test(navigator.userAgent); // UA sniff is intentional: Firefox Profiler CO2 feature is Firefox-only
+
+    const DEPRECATED_ELEMENTS = ["font", "center", "blink", "marquee", "applet", "basefont", "big", "strike", "tt"];
+
+    const EXPERIMENTAL_FEATURES = [
+      { label: "popover", pattern: /\bpopover\b/i, href: "https://caniuse.com/mdn-html_global_attributes_popover" },
+      { label: "<dialog>", pattern: /<dialog[\s>]/i, href: "https://caniuse.com/dialog" },
+      { label: "CSS @layer", pattern: /@layer\b/i, href: "https://caniuse.com/css-cascade-layers" },
+      { label: "CSS @container", pattern: /@container\b/i, href: "https://caniuse.com/css-container-queries" },
+      { label: "color-mix()", pattern: /color-mix\s*\(/i, href: "https://caniuse.com/mdn-css_types_color_color-mix" },
+      { label: "<selectlist>/<selectmenu>", pattern: /<select(?:list|menu)[\s>]/i, href: "https://caniuse.com/mdn-html_elements_selectlist" },
+      { label: "<details name>", pattern: /<details[^>]+\bname\s*=/i, href: "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details#name" }
+    ];
+
+    function computeMetrics(sanitizedDocument, rawInput) {
+      const rawBytes = new TextEncoder().encode(rawInput).length;
+      const elementCount = sanitizedDocument.querySelectorAll("*").length;
+      const images = sanitizedDocument.querySelectorAll("img");
+      const totalImages = images.length;
+      const imagesWithoutAlt = Array.from(images).filter((img) => !img.hasAttribute("alt")).length;
+      const deprecatedFound = DEPRECATED_ELEMENTS.filter((tag) => sanitizedDocument.querySelector(tag) !== null);
+      const experimentalFound = EXPERIMENTAL_FEATURES.filter(({ pattern }) => pattern.test(rawInput));
+      return { rawBytes, elementCount, totalImages, imagesWithoutAlt, deprecatedFound, experimentalFound };
+    }
+
+    const VAGUE_LINK_TEXT = ["click here", "here", "read more", "more", "learn more", "this link", "link"];
+
+    function computeSuggestions(sanitizedDocument, rawInput) {
+      const suggestions = [];
+
+      if (containsFullDocument(rawInput.trim())) {
+        const rawDoc = (new DOMParser()).parseFromString(rawInput, "text/html");
+        if (!rawDoc.documentElement.getAttribute("lang")) {
+          suggestions.push('Add a lang attribute to <html> (e.g., lang="en").');
+        }
+        const rawTitle = rawDoc.querySelector("title");
+        if (!rawTitle || !rawTitle.textContent.trim()) {
+          suggestions.push("Add a non-empty <title> to describe the page.");
+        }
+        if (!rawDoc.querySelector("meta[charset]")) {
+          suggestions.push('Add <meta charset="UTF-8"> for reliable character encoding.');
+        }
+      }
+
+      const imgsNoAlt = sanitizedDocument.querySelectorAll("img:not([alt])").length;
+      if (imgsNoAlt > 0) {
+        suggestions.push(imgsNoAlt + " image" + (imgsNoAlt !== 1 ? "s" : "") + " missing an alt attribute.");
+      }
+
+      const emptyHeadings = Array.from(sanitizedDocument.querySelectorAll("h1,h2,h3,h4,h5,h6"))
+        .filter((h) => !h.textContent.trim()).length;
+      if (emptyHeadings > 0) {
+        suggestions.push(emptyHeadings + " empty heading" + (emptyHeadings !== 1 ? "s" : "") + " detected.");
+      }
+
+      const vagueLinks = Array.from(sanitizedDocument.querySelectorAll("a"))
+        .filter((a) => VAGUE_LINK_TEXT.includes(a.textContent.trim().toLowerCase())).length;
+      if (vagueLinks > 0) {
+        suggestions.push(vagueLinks + " link" + (vagueLinks !== 1 ? "s" : "") + ' with non-descriptive text (e.g., "click here").');
+      }
+
+      const inlineStyles = sanitizedDocument.querySelectorAll("[style]").length;
+      if (inlineStyles > 0) {
+        suggestions.push(inlineStyles + " inline style attribute" + (inlineStyles !== 1 ? "s" : "") + " found — consider using CSS classes.");
+      }
+
+      const tablesNoCaption = Array.from(sanitizedDocument.querySelectorAll("table"))
+        .filter((t) => !t.querySelector("caption")).length;
+      if (tablesNoCaption > 0) {
+        suggestions.push(tablesNoCaption + " table" + (tablesNoCaption !== 1 ? "s" : "") + " without a <caption>.");
+      }
+
+      const thNoScope = sanitizedDocument.querySelectorAll("th:not([scope])").length;
+      if (thNoScope > 0) {
+        suggestions.push(thNoScope + " <th> element" + (thNoScope !== 1 ? "s" : "") + " missing a scope attribute.");
+      }
+
+      return suggestions;
+    }
+
+    function renderMetrics(metrics, suggestions) {
+      const { rawBytes, elementCount, totalImages, imagesWithoutAlt, deprecatedFound, experimentalFound } = metrics;
+
+      metricBytes.textContent = rawBytes < 1024
+        ? rawBytes + "\u00a0B"
+        : (rawBytes / 1024).toFixed(1) + "\u00a0KB";
+      metricBytes.title = rawBytes + " bytes";
+
+      metricElements.textContent = elementCount + "\u00a0element" + (elementCount !== 1 ? "s" : "");
+
+      if (totalImages === 0) {
+        metricImages.textContent = "No images";
+        metricImages.className = "metric-chip";
+      } else if (imagesWithoutAlt > 0) {
+        metricImages.textContent = "\u26a0\u00a0" + imagesWithoutAlt + "/" + totalImages + "\u00a0img missing alt";
+        metricImages.className = "metric-chip metric-chip--warn";
+      } else {
+        metricImages.textContent = totalImages + "\u00a0img, alt OK";
+        metricImages.className = "metric-chip";
+      }
+
+      metricDynamic.innerHTML = "";
+
+      deprecatedFound.forEach((tag) => {
+        const chip = document.createElement("span");
+        chip.className = "metric-chip metric-chip--warn";
+        chip.textContent = "\u26a0\u00a0<" + tag + "> deprecated";
+        metricDynamic.appendChild(chip);
+      });
+
+      experimentalFound.forEach(({ label, href }) => {
+        const chip = document.createElement("span");
+        chip.className = "metric-chip metric-chip--info";
+        chip.textContent = "\u2736\u00a0" + label + "\u00a0";
+        const link = document.createElement("a");
+        link.href = href;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = "caniuse \u2197";
+        chip.appendChild(link);
+        metricDynamic.appendChild(chip);
+      });
+
+      if (suggestions.length > 0) {
+        suggestionCount.textContent = suggestions.length;
+        suggestionsList.innerHTML = "";
+        suggestions.forEach((text) => {
+          const li = document.createElement("li");
+          li.textContent = text;
+          suggestionsList.appendChild(li);
+        });
+        suggestionsDetails.hidden = false;
+      } else {
+        suggestionsDetails.hidden = true;
+      }
+    }
 
     function setStatus(message, state) {
       statusMessage.textContent = message;
@@ -800,6 +1139,10 @@
       preview.srcdoc = previewMarkup;
       renderDetails.textContent = previewTheme + " theme, " + previewViewport + " view, Sa11y docked " + sa11yPosition + ". Last render: " + new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit", second: "2-digit" });
       setStatus("Preview updated and rescanned.", "success");
+
+      const metrics = computeMetrics(sanitizedDocument, editor.value);
+      const suggestions = computeSuggestions(sanitizedDocument, editor.value);
+      renderMetrics(metrics, suggestions);
     }
 
     function queuePreviewRefresh() {
@@ -890,6 +1233,13 @@
     });
     sa11yButtons.forEach((button) => {
       button.addEventListener("click", () => setSa11yPosition(button.dataset.sa11yOption));
+    });
+
+    if (isFirefox) {
+      firefoxBanner.hidden = false;
+    }
+    dismissFirefoxBanner.addEventListener("click", () => {
+      firefoxBanner.hidden = true;
     });
 
     window.addEventListener("keydown", (event) => {
