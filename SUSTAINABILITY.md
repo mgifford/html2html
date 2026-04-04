@@ -183,8 +183,8 @@ dismissFirefoxBanner.addEventListener("click", () => {
 The Firefox Profiler (`profiler.firefox.com`) complements the in-browser CO2 estimate by covering the execution layer:
 
 1. Open the app in Firefox.
-2. Open **Firefox Profiler**: go to `about:profiling` or use the browser toolbar button.
-3. Start a recording, interact with the editor (type markup, trigger a preview refresh), then stop.
+2. Open **Firefox Profiler**: go to `about:profiling`, enable the [Firefox Profiler Menu Button](https://profiler.firefox.com), or use the DevTools Performance panel.
+3. Start a recording (ensure the **Power** preset is selected), interact with the editor (type markup, trigger a preview refresh), then stop.
 4. Inspect the flame chart for:
    - **JavaScript execution time** (parsing, compilation, runtime calls)
    - **Layout and style recalculation** triggered by preview updates
