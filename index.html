@@ -603,38 +603,37 @@
       gap: 6px;
     }
 
-    .firefox-banner__details summary {
-      cursor: pointer;
-      color: #ffca6e;
-      font-weight: 600;
-      font-size: 0.88rem;
-      user-select: none;
-      display: inline-block;
-      margin-top: 4px;
+    .firefox-banner__body p {
+      margin: 0;
     }
 
-    .firefox-banner__details summary:hover {
-      text-decoration: underline;
-    }
-
-    .firefox-banner__details p,
-    .firefox-banner__details ol {
+    .firefox-banner__body ul {
       margin: 6px 0 0;
-      font-size: 0.84rem;
+      padding-left: 1.4rem;
+      font-size: 0.86rem;
       color: rgba(255, 255, 255, 0.85);
       line-height: 1.5;
     }
 
-    .firefox-banner__details ol {
-      padding-left: 1.4rem;
+    body[data-app-theme="light"] .firefox-banner__body ul {
+      color: #3b4a6b;
+    }
+
+    .co2-banner {
+      font-size: 0.94rem;
+      color: var(--text);
     }
     
-    .firefox-banner__details code {
-      background: rgba(0, 0, 0, 0.2);
-      padding: 2px 5px;
-      border-radius: 4px;
-      font-family: var(--font-code);
-      font-size: 0.8em;
+    .co2-banner small {
+      color: var(--text-muted);
+    }
+
+    body[data-app-theme="light"] .co2-banner {
+      color: #0d1728;
+    }
+
+    body[data-app-theme="light"] .co2-banner small {
+      color: #53627a;
     }
 
     .app-footer {
@@ -690,19 +689,8 @@
       color: #0d1728;
     }
 
-    body[data-app-theme="light"] .firefox-banner a,
-    body[data-app-theme="light"] .firefox-banner__details summary {
+    body[data-app-theme="light"] .firefox-banner a {
       color: #8a5000;
-    }
-
-    body[data-app-theme="light"] .firefox-banner__details p,
-    body[data-app-theme="light"] .firefox-banner__details ol {
-      color: #3b4a6b;
-    }
-
-    body[data-app-theme="light"] .firefox-banner__details code {
-      background: rgba(0, 0, 0, 0.06);
-      color: #041019;
     }
 
     body[data-app-theme="light"] .app-footer {
@@ -870,20 +858,19 @@
     </section>
 
     <section class="metrics" aria-label="HTML metrics">
+      <div class="co2-banner" aria-live="polite">
+        Transmission CO2 estimate: <strong id="globalCO2">—</strong> <small>(SWD model, HTML bytes only)</small>
+      </div>
       <div class="firefox-banner" id="firefoxBanner" hidden>
         <div class="firefox-banner__body">
-          <span aria-live="polite">🦊 Transmission CO2 estimate: <strong id="firefoxCO2">—</strong> <small>(SWD model, HTML bytes only)</small></span>
-          <details class="firefox-banner__details">
-            <summary>How to measure real execution energy</summary>
-            <p>This estimate only covers network transfer. To measure true CPU/network energy:</p>
-            <ol>
-              <li>Go to <code>about:profiling</code> or open Developer Tools.</li>
-              <li>Select the <strong>Power</strong> preset in the Profiler options.</li>
-              <li>Start recording, interact with the preview, then stop recording to see the energy profile.</li>
-            </ol>
-          </details>
+          <p>🦊 This estimate only covers network transfer. To measure true CPU/network energy:</p>
+          <ul>
+            <li>Go to <a href="about:profiling" target="_blank" rel="noopener noreferrer">about:profiling</a> or open Developer Tools.</li>
+            <li>Select the <strong>Power</strong> preset in the Profiler options.</li>
+            <li>Start recording, interact with the preview, then stop recording to see the energy profile.</li>
+          </ul>
         </div>
-        <button type="button" id="dismissFirefoxBanner" aria-label="Dismiss Firefox CO2 estimate">✕</button>
+        <button type="button" id="dismissFirefoxBanner" aria-label="Dismiss Firefox instruction">✕</button>
       </div>
       <div class="metrics__chips" id="metricsChips" aria-live="polite" aria-label="Markup statistics">
         <span class="metric-chip" id="metricBytes">—</span>
@@ -921,7 +908,7 @@
     const previewSurfaceLabel = document.getElementById("previewSurfaceLabel");
     const firefoxBanner = document.getElementById("firefoxBanner");
     const dismissFirefoxBanner = document.getElementById("dismissFirefoxBanner");
-    const firefoxCO2 = document.getElementById("firefoxCO2");
+    const globalCO2 = document.getElementById("globalCO2");
     const metricBytes = document.getElementById("metricBytes");
     const metricElements = document.getElementById("metricElements");
     const metricImages = document.getElementById("metricImages");
@@ -1096,9 +1083,7 @@
         suggestionsDetails.hidden = true;
       }
 
-      if (isFirefox) {
-        firefoxCO2.textContent = formatCO2(rawBytes);
-      }
+      globalCO2.textContent = formatCO2(rawBytes);
     }
 
     function setStatus(message, state) {
