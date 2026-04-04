@@ -1,30 +1,29 @@
 # Live Accessibility Playground
 
-Live Accessibility Playground is a single-file HTML tool for testing raw HTML and inline SVG in real time.
+[![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+[![Accessibility](https://github.com/mgifford/html2html/actions/workflows/accessibility.yml/badge.svg)](https://github.com/mgifford/html2html/actions/workflows/accessibility.yml)
+[![GitHub Pages](https://img.shields.io/badge/Live%20demo-GitHub%20Pages-0969da)](https://mgifford.github.io/html2html/)
 
-It gives you:
+A single-file HTML tool for testing raw HTML and inline SVG in real time, with instant accessibility feedback.
 
-- A code editor for writing or pasting HTML and SVG
-- A live preview rendered inside an isolated `iframe`
-- Instant accessibility feedback from [Sa11y](https://sa11y.netlify.app)
-- Automated accessibility checks with axe for the shipped app states
-- Theme controls for light and dark preview modes
-- Viewport controls for desktop, tablet, and mobile testing
+**[Open the Live Playground &rarr;](https://mgifford.github.io/html2html/)**
 
-## Why this is useful
+## How it works
 
-A lot of accessibility and frontend work happens before a full app or CMS integration exists. Sometimes you just need a fast place to answer questions like:
+Paste or write HTML and SVG in the editor. The app sanitizes your input and renders it live in an isolated `iframe`. [Sa11y](https://sa11y.netlify.app) runs automatically on every update and highlights accessibility issues directly in the preview.
 
-- Does this markup structure make sense?
-- Does this SVG expose a useful accessible name?
-- What does this component look like on mobile?
-- Does this content still work in dark mode?
-- Will this external CSS file behave the way I expect?
-- Does Sa11y flag obvious issues before I ship this into a larger system?
-
-This project makes those checks fast.
-
-Instead of setting up a framework, a build step, or a design system sandbox, you can paste markup directly into the editor and see the result immediately. That makes it useful for prototyping, debugging, audits, demos, and accessibility training.
+```mermaid
+flowchart TD
+    A([Open the playground]) --> B[Paste or write HTML / SVG in editor]
+    B --> C{Debounce timer fires}
+    C --> D[Sanitize input\nstrip scripts & unsafe patterns]
+    D --> E[Render in sandboxed iframe]
+    E --> F[Sa11y checks run on rendered content]
+    F --> G[Accessibility hints appear in preview]
+    G --> B
+    E --> H[Toggle theme\nlight / dark]
+    E --> I[Switch viewport\ndesktop / tablet / mobile]
+```
 
 ## Who it can help
 
@@ -35,7 +34,20 @@ Instead of setting up a framework, a build step, or a design system sandbox, you
 - Trainers teaching semantic HTML and common accessibility issues
 - Anyone debugging SVG, forms, headings, images, or content structure
 
-## What it does
+## Why it is useful
+
+A lot of accessibility and frontend work happens before a full app or CMS integration exists. Sometimes you just need a fast place to answer questions like:
+
+- Does this markup structure make sense?
+- Does this SVG expose a useful accessible name?
+- What does this component look like on mobile?
+- Does this content still work in dark mode?
+- Will this external CSS file behave the way I expect?
+- Does Sa11y flag obvious issues before I ship this into a larger system?
+
+Instead of setting up a framework, a build step, or a design system sandbox, you can paste markup directly into the editor and see the result immediately.
+
+## Features
 
 - Renders HTML and inline SVG live as you type
 - Debounces updates to avoid excessive rerenders
@@ -68,52 +80,47 @@ Switch between desktop, tablet, and mobile preview widths to spot layout issues 
 
 Toggle preview theme modes to see whether your markup and CSS still read clearly across different presentation contexts.
 
-## How it works
+## Safety model
 
-The app uses a sandboxed `iframe` as the preview surface. That matters because:
+The app uses a sandboxed `iframe` as the preview surface:
 
 - User CSS is isolated from the editor UI
 - The preview can be rebuilt cleanly on each change
 - Sa11y can run against the rendered document
-- User-provided JavaScript can be stripped while internal checking logic still runs
+- User-provided JavaScript is stripped while internal checking logic still runs
 
-The editor content is sanitized before rendering. Script tags, inline event handlers, and unsafe URL patterns are removed before the preview is generated.
+Script tags, inline event handlers, and unsafe URL patterns are removed before the preview is generated.
 
 ## Quick start
 
-### Open locally
-
-Because this is a single HTML file, you can open it directly in a browser:
-
-1. Clone the repository
-2. Open `index.html`
-
-You can also serve it from a local static server if you prefer.
-
 ### Use the hosted version
 
-If GitHub Pages is enabled for the repository, the app can be accessed from the published Pages URL.
+Open the playground directly in your browser — no install needed: **[mgifford.github.io/html2html](https://mgifford.github.io/html2html/)**
 
-## Accessibility verification
+### Run locally
 
-This project uses both Sa11y and axe:
+Because this is a single HTML file, you can also open it directly:
 
-- Sa11y provides in-page feedback inside the live preview
-- axe is used as an automated check for the shipped interface and key preview states
+1. Clone the repository
+2. Open `index.html` in a browser
 
-To run the automated scan locally:
+Or serve it from any local static server if you prefer.
 
-1. Run `npm install`
-2. Run `npx playwright install chromium`
-3. Run `npm run test:a11y`
+## Running tests locally
 
-## Project structure
+The project uses [axe](https://github.com/dequelabs/axe-core) and [Playwright](https://playwright.dev) to verify accessibility of the shipped interface.
 
-- [index.html](/Users/mike.gifford/html2html/index.html) - the complete application in one file
+```bash
+npm install
+npx playwright install chromium
+npm run test:a11y
+```
+
+The scan checks the app shell and key preview states for axe violations. CI runs the same check on every push and pull request.
 
 ## Notes and limitations
 
-- Dark mode preview sets a dark page context, but a full dark-mode result still depends on the user’s own CSS
+- Dark mode preview sets a dark page context, but a full dark-mode result still depends on the user's own CSS
 - External CSS links are allowed in the preview, but third-party user JavaScript is intentionally blocked
 - This is a lightweight playground, not a full replacement for browser testing, screen reader testing, or production security review
 
@@ -129,4 +136,4 @@ Possible enhancements include:
 
 ## License
 
-AGPL
+[GNU Affero General Public License v3.0](LICENSE)
