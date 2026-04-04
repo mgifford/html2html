@@ -1,5 +1,9 @@
 # Live Accessibility Playground
 
+[![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](LICENSE)
+[![Accessibility CI](https://github.com/mgifford/html2html/actions/workflows/accessibility.yml/badge.svg)](https://github.com/mgifford/html2html/actions/workflows/accessibility.yml)
+[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-live-brightgreen)](https://mgifford.github.io/html2html/)
+
 Live Accessibility Playground is a single-file HTML tool for testing raw HTML and inline SVG in real time.
 
 It gives you:
@@ -79,6 +83,20 @@ The app uses a sandboxed `iframe` as the preview surface. That matters because:
 
 The editor content is sanitized before rendering. Script tags, inline event handlers, and unsafe URL patterns are removed before the preview is generated.
 
+```mermaid
+flowchart TD
+    A([User opens index.html\nor GitHub Pages URL]) --> B[Types or pastes\nHTML / SVG in editor]
+    B --> C{Debounce\n300 ms}
+    C --> D[Sanitize input\nstrip scripts & unsafe URLs]
+    D --> E[Inject sanitized HTML\ninto sandboxed iframe]
+    E --> F[Sa11y initializes\ninside preview]
+    F --> G([Accessibility tips\nappear in preview])
+    B --> H[Theme toggle\nlight / dark]
+    B --> I[Viewport toggle\ndesktop / tablet / mobile]
+    H --> E
+    I --> E
+```
+
 ## Quick start
 
 ### Open locally
@@ -92,7 +110,9 @@ You can also serve it from a local static server if you prefer.
 
 ### Use the hosted version
 
-If GitHub Pages is enabled for the repository, the app can be accessed from the published Pages URL.
+The app is published via GitHub Pages and available at:
+
+**[https://mgifford.github.io/html2html/](https://mgifford.github.io/html2html/)**
 
 ## Accessibility verification
 
@@ -109,7 +129,7 @@ To run the automated scan locally:
 
 ## Project structure
 
-- [index.html](/Users/mike.gifford/html2html/index.html) - the complete application in one file
+- [index.html](index.html) - the complete application in one file
 
 ## Notes and limitations
 
