@@ -129,4 +129,4 @@ Possible enhancements include:
 
 ## License
 
-Add the license that matches how you want to share or reuse this project.
+AGPL
